@@ -1,28 +1,37 @@
-const {DataTypes} = require('sequelize');
-const sequelize = require('../config/sequelize');
+const { DataTypes } = require("sequelize");
+const sequelize = require("../config/sequelize");
 
-const Stock_item = sequelize.define('stock_items',{
-    title:{
-        type: DataTypes.STRING,
-        allowNull: false,
+const StockItem = sequelize.define(
+  "StockItem",
+  {
+    title: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
-    description: {type: DataTypes.STRING},
+    description: {
+      type: DataTypes.STRING,
+    },
     unity: {
-        type: DataTypes.INTEGER,
-        defaultValue: 0,
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
     },
     price: {
-        type: DataTypes.DOUBLE,
-        defaultValue: 0,
+      type: DataTypes.DOUBLE,
+      defaultValue: 0,
     },
-    category:{
-        type: DataTypes.STRING,
-        allowNull:false
+    category: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
-    show_register:{
-        type: DataTypes.BOOLEAN,
-        allowNull: false
-    }
-})
+    show_register: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true,
+    },
+  },
+  {
+    tableName: "stock_items", // Força o uso da tabela 'stock_items'
+  }
+);
 
-module.exports = Stock_item;
+module.exports = StockItem;
