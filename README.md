@@ -70,15 +70,10 @@ npx sequelize-cli db:migrate
 npm run api
 ```
 
-## Documentação da API
-
-Como é um projeto em equipe, o responsável pela API do projeto pode ser encontrado no link abaixo:
-
-[@stock-api](https://github.com/yuri-moraes/stock_api)
-
 ## Autores
 
 - [@yuri-moraes](https://www.github.com/yuri-moraes)
+- [@marcos90s](https://github.com/marcos90s/stock_api)
 
 ## Contribuindo
 
