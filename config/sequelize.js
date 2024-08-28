@@ -1,10 +1,8 @@
 const { Sequelize } = require("sequelize");
-const config = require("./config");
 
-const sequelize = new Sequelize(config.url, {
-  dialect: config.dialect,
+const sequelize = new Sequelize(process.env.DATABASE_URL, {
+  dialect: "postgres",
   protocol: "postgres",
-  url: process.env.DATABASE_URL,
   dialectOptions: {
     ssl: {
       require: true,
