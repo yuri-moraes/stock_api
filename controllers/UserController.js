@@ -81,7 +81,7 @@ module.exports = {
       const updateData = {};
       if (req.body.name) updateData.name = req.body.name;
       if (req.body.password) updateData.password = req.body.password;
-      if (req.body.role) updateData.role = req.body.role;
+      if (req.body.role && req.authenticatedUser.role === 'admin') updateData.role = req.body.role;
 
       // Realiza a atualização no banco de dados
       const [updatedRows] = await User.update(updateData, {
@@ -93,41 +93,6 @@ module.exports = {
       }
 
       // Retorna os dados atualizados do usuário
-      const updatedUser = await User.findByPk(id);
-      return res.status(200).json(updatedUser);
-    } catch (error) {
-      return res.status(500).json({ message: error.message });
-    }
-  },
-  async editUser(req, res) {
-    // Novo método para o endpoint específico
-    try {
-      const allowedFields = ["name", "password", "role"];
-      const updates = Object.keys(req.body);
-
-      const isValidOperation = updates.some((updateField) =>
-        allowedFields.includes(updateField)
-      );
-
-      if (!isValidOperation) {
-        return res.status(400).json({ message: "Parâmetro inválido" });
-      }
-
-      const { id } = req.params;
-
-      const updateData = {};
-      if (req.body.name) updateData.name = req.body.name;
-      if (req.body.password) updateData.password = req.body.password;
-      if (req.body.role) updateData.role = req.body.role;
-
-      const [updatedRows] = await User.update(updateData, {
-        where: { id },
-      });
-
-      if (updatedRows === 0) {
-        return res.status(404).json({ message: "Usuário não encontrado" });
-      }
-
       const updatedUser = await User.findByPk(id);
       return res.status(200).json(updatedUser);
     } catch (error) {
