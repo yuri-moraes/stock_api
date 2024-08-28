@@ -1,7 +1,8 @@
 const express = require("express");
+const cors = require("cors");
 const stockRouter = require("../routes/item_routes");
 const userRouter = require("../routes/user_routes");
-const cors = require("cors");
+
 require("dotenv").config();
 
 const server = express();
@@ -14,4 +15,6 @@ server.use("/items", stockRouter);
 server.use("/users", userRouter);
 
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, console.log(`Iniciado em: localhost:${PORT}`));
+server.listen(PORT, () => {
+  console.log(`Iniciado em: http://localhost:${PORT}`);
+});

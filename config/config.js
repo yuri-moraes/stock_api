@@ -1,13 +1,9 @@
-require('dotenv').config();
-//DB CONFIG
-module.exports = {
-  dialect: 'postgres',
-  host: process.env.DB_HOST,
-  username: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  define:{
-    timestamp: true
-  }
-};
+require("dotenv").config();
 
+module.exports = {
+  url: process.env.DATABASE_URL, // Use a URL de conexão direta
+  dialect: "postgres",
+  define: {
+    timestamps: true,
+  },
+};
