@@ -23,7 +23,7 @@ module.exports = {
 
       // Verifique a senha aqui, se necessário
       const token = jwt.sign(
-        { email: user.email, id: user.id },
+        { email: user.email, id: user.id, role: user.role },
         process.env.JWT_SECRET,
         { expiresIn: "1h" }
       );
@@ -32,7 +32,8 @@ module.exports = {
         user: {
           id: user.id,
           email: user.email,
-          name: user.name, // Inclua qualquer outro campo necessário
+          name: user.name,
+          role: user.role,
         },
         token,
       });
@@ -64,33 +65,38 @@ module.exports = {
     try {
       const allowedFields = ["name", "password", "role"];
       const updates = Object.keys(req.body);
-      const isValidOperation = updates.every((updateBody) =>
-        allowedFields.includes(updateBody)
+
+      // Verifica se pelo menos um campo permitido está presente
+      const isValidOperation = updates.some((updateField) =>
+        allowedFields.includes(updateField)
       );
 
       if (!isValidOperation) {
         return res.status(400).json({ message: "Parâmetro inválido" });
       }
 
-      const { name, password, role } = req.body;
       const { id } = req.params;
 
-      const updatedRows = await User.update(
-        { name, password, role },
-        {
-          where: { id },
-        }
-      );
+      // Cria um objeto de atualização dinamicamente com os campos válidos
+      const updateData = {};
+      if (req.body.name) updateData.name = req.body.name;
+      if (req.body.password) updateData.password = req.body.password;
+      if (req.body.role) updateData.role = req.body.role;
 
-      if (updatedRows[0] === 0) {
+      // Realiza a atualização no banco de dados
+      const [updatedRows] = await User.update(updateData, {
+        where: { id },
+      });
+
+      if (updatedRows === 0) {
         return res.status(404).json({ message: "Usuário não encontrado" });
       }
 
-      // Opcional: Retornar os dados atualizados do usuário
+      // Retorna os dados atualizados do usuário
       const updatedUser = await User.findByPk(id);
       return res.status(200).json(updatedUser);
     } catch (error) {
-      return res.status(500).json(error.message);
+      return res.status(500).json({ message: error.message });
     }
   },
   async delete(req, res) {
