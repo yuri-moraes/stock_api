@@ -7,7 +7,6 @@ module.exports ={
             const stock_item = await Stock_item.create({title, description, unity, price, category})
             return res.status(201).json(stock_item)
         }catch(error){
-            console.log('CONSOLE:'+error.message)
             return res.status(500).json(error.message)
         }
     },
