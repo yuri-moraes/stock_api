@@ -6,4 +6,10 @@ module.exports = {
   define: {
     timestamps: true,
   },
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false,
+    },
+  },
 };
