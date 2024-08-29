@@ -4,6 +4,8 @@
 
 O projeto "Stock API" tem como objetivo ser uma aplicação web para controle de estoque de itens, implementando métodos CRUD para entidades de usuários e itens. O administrador é responsável por gerenciar contas de usuários e atualizar os itens, enquanto um usuário comum pode apenas realizar login, alterar a senha, criar e visualizar itens.
 
+Acesse a aplicação através do seguinte link: [Clique aqui](https://react-stock-jph97vote-yurimoraes-projects.vercel.app/#/)
+
 ## Endpoints da API
 
 A API foi desenvolvida com Node.js e Express, utilizando PostgreSQL como banco de dados. Abaixo estão os principais endpoints da API para gerenciar usuários e itens de estoque:
