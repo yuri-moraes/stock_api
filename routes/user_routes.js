@@ -5,35 +5,14 @@ const protectedRoutesMiddleware = require("../middlewares/protectedRoutesMiddlew
 
 const userRouter = express.Router();
 
-userRouter.post(
-  "/register",
-  validationMiddleware.validateData,
-  UserController.register
-);
-userRouter.post(
-  "/login",
-  validationMiddleware.validateLogin,
-  UserController.login
-);
-// rotas protegidas
+// Rotas públicas
+userRouter.post("/register", validationMiddleware.validateData, UserController.register);
+userRouter.post("/login", validationMiddleware.validateLogin, UserController.login);
+
+// Rotas protegidas
 userRouter.get("/", protectedRoutesMiddleware, UserController.findAll);
-userRouter.get(
-  "/:id",
-  protectedRoutesMiddleware,
-  validationMiddleware.validadeUuid,
-  UserController.findById
-);
-userRouter.put(
-  "/edit/:id",
-  protectedRoutesMiddleware,
-  validationMiddleware.validadeUuid,
-  UserController.editUser
-);
-userRouter.delete(
-  "/:id",
-  protectedRoutesMiddleware,
-  validationMiddleware.validadeUuid,
-  UserController.delete
-);
+userRouter.get("/:id", protectedRoutesMiddleware, validationMiddleware.validadeUuid, UserController.findById);
+userRouter.put("/edit/:id", protectedRoutesMiddleware, validationMiddleware.validadeUuid, UserController.editUser);
+userRouter.delete("/:id", protectedRoutesMiddleware, validationMiddleware.validadeUuid, UserController.delete);
 
 module.exports = userRouter;
