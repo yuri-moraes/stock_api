@@ -61,12 +61,12 @@ module.exports = {
       return res.status(500).status(error.message);
     }
   },
-  async update(req, res) {
+  async editUser(req, res) {
+    // Novo método para o endpoint específico
     try {
       const allowedFields = ["name", "password", "role"];
       const updates = Object.keys(req.body);
 
-      // Verifica se pelo menos um campo permitido está presente
       const isValidOperation = updates.some((updateField) =>
         allowedFields.includes(updateField)
       );
@@ -77,13 +77,11 @@ module.exports = {
 
       const { id } = req.params;
 
-      // Cria um objeto de atualização dinamicamente com os campos válidos
       const updateData = {};
       if (req.body.name) updateData.name = req.body.name;
       if (req.body.password) updateData.password = req.body.password;
-      if (req.body.role && req.authenticatedUser.role === 'admin') updateData.role = req.body.role;
+      if (req.body.role && req.authenticatedUser.role === "admin") updateData.role = req.body.role;
 
-      // Realiza a atualização no banco de dados
       const [updatedRows] = await User.update(updateData, {
         where: { id },
       });
@@ -92,7 +90,6 @@ module.exports = {
         return res.status(404).json({ message: "Usuário não encontrado" });
       }
 
-      // Retorna os dados atualizados do usuário
       const updatedUser = await User.findByPk(id);
       return res.status(200).json(updatedUser);
     } catch (error) {
