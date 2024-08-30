@@ -12,4 +12,5 @@ module.exports = {
       rejectUnauthorized: false,
     },
   },
+  dialectModule: require("pg"),
 };
