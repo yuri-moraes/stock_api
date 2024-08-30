@@ -80,7 +80,7 @@ module.exports = {
       const updateData = {};
       if (req.body.name) updateData.name = req.body.name;
       if (req.body.password) updateData.password = req.body.password;
-      if (req.body.role) updateData.role = req.body.role;
+      if (req.body.role && req.authenticatedUser.role === "admin") updateData.role = req.body.role;
 
       const [updatedRows] = await User.update(updateData, {
         where: { id },
