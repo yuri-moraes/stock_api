@@ -15,7 +15,7 @@ module.exports ={
     },
     async findAll(req, res){
         try{
-            const stock_items = await Stock_item.findAll({where:{show_register: true}})
+            const stock_items = await Stock_item.findAll()
             return res.status(200).json(stock_items)
         }catch(error){
             return res.status(500).json(error.message)
@@ -25,7 +25,7 @@ module.exports ={
         try{            
             const {id} = req.params
             const stock_item = await Stock_item.findByPk(id)
-            if(!stock_item || !stock_item.show_register){
+            if(!stock_item){
                 return res.status(404).json({message: 'Item não encontrado!'})
             }
             return res.status(200).json(stock_item)
@@ -70,7 +70,7 @@ module.exports ={
             const {unity} = req.body
             const stock_item = await Stock_item.findByPk(id)
 
-            if(!stock_item || !stock_item.show_register){
+            if(!stock_item){
                 return res.status(404).json({message: 'Item não encontrado!'})
             }
             const newQuantity = stock_item.unity-unity
