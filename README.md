@@ -74,8 +74,8 @@ npm run api
 
 ## Autores
 
+- [@marcos90s](https://github.com/marcos90s)
 - [@yuri-moraes](https://www.github.com/yuri-moraes)
-- [@marcos90s](https://github.com/marcos90s/stock_api)
 
 ## Contribuindo
 

@@ -1,7 +1,6 @@
 const express = require("express");
 const Stock_ItemController = require("../controllers/Stock_ItemController");
 const protectedRoutesMiddleware = require("../middlewares/protectedRoutesMiddleware");
-const showRegisterMiddleware = require("../middlewares/showRegisterMiddleware");
 
 const stockRouter = express.Router();
 

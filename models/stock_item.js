@@ -23,11 +23,6 @@ const StockItem = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    show_register: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-      defaultValue: true,
-    },
   },
   {
     tableName: "stock_items", // Força o uso da tabela 'stock_items'
