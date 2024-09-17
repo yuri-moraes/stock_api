@@ -51,14 +51,14 @@ module.exports = {
   },
   async findById(req, res) {
     try {
-      const { id } = req.params;
-      const user = await User.findByPk(id);
+      const { email } = req.params;
+      const user = await User.findOne({ where: { email } });
       if (!user) {
         return res.status(404).json({ message: "Usuário não encontrado!" });
       }
       return res.status(200).json(user);
     } catch (error) {
-      return res.status(500).status(error.message);
+      return res.status(500).json({ message: error.message });
     }
   },
   async editUser(req, res) {
@@ -80,7 +80,8 @@ module.exports = {
       const updateData = {};
       if (req.body.name) updateData.name = req.body.name;
       if (req.body.password) updateData.password = req.body.password;
-      if (req.body.role && req.authenticatedUser.role === "admin") updateData.role = req.body.role;
+      if (req.body.role && req.authenticatedUser.role === "admin")
+        updateData.role = req.body.role;
 
       const [updatedRows] = await User.update(updateData, {
         where: { id },
