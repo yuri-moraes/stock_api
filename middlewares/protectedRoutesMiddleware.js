@@ -16,9 +16,11 @@ module.exports = async (req, res, next)=>{
         if(!user){
             return res.status(401).json({message: "Usuário invalido"})
         }
-        if(user.role !== 'admin'){
+        if(user.role !== 'admin' && req.params.id !== user.id){
             return res.status(401).json({message: 'Usuário não autorizado'})
         }
+
+        req.authenticatedUser = user;
         next()
     }catch(error){
         console.log(error)
