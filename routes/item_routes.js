@@ -9,22 +9,10 @@ stockRouter.patch("/:id/subt", Stock_ItemController.remove_items);
 
 stockRouter.get("/", Stock_ItemController.findAll);
 stockRouter.get("/:id", Stock_ItemController.findById);
-stockRouter.get("/search/:param", Stock_ItemController.search_items);
+stockRouter.get('/search/:param', Stock_ItemController.search_items);
 //Rotas protegidas
-stockRouter.put(
-  "/:id/update",
-  protectedRoutesMiddleware,
-  Stock_ItemController.update
-);
-stockRouter.delete(
-  "/:id",
-  protectedRoutesMiddleware,
-  Stock_ItemController.delete
-);
-stockRouter.patch(
-  "/:id/add",
-  protectedRoutesMiddleware,
-  Stock_ItemController.insert_items
-);
+stockRouter.put("/:id/update", protectedRoutesMiddleware, Stock_ItemController.update);
+stockRouter.delete("/:id", protectedRoutesMiddleware, Stock_ItemController.delete);
+stockRouter.patch("/:id/add", protectedRoutesMiddleware, Stock_ItemController.insert_items);
 
 module.exports = stockRouter;
