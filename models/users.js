@@ -1,5 +1,5 @@
 const {DataTypes} = require('sequelize');
-const sequelize = require('../config/sequelize');
+const sequelize = require("../config/sequelize");
 const Logs = require('./logs');
 
 const User = sequelize.define('users',{
@@ -19,11 +19,13 @@ const User = sequelize.define('users',{
     role: {
         type: DataTypes.STRING
     }
-})
+});
 
-User.hasOne(Logs,{
-    foreignKey: 'userId',
-    as: 'log'
-})
+User.associate = function(models){
+    User.hasOne(models.Logs,{
+        foreignKey: 'userId',
+        as: 'log',
+    });
+};
 
-module.exports = User
+module.exports = User;

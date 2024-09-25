@@ -1,13 +1,11 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/sequelize");
-const User = require("./users");
-
-const Logs = sequelize.define(
-    "Logs",{
+//definindo a tabela
+const Logs = sequelize.define("logs",{
         userId: {
             type: DataTypes.UUID,
             references:{
-                model: User,
+                model: 'users',
                 key:'id'
             }
         },
@@ -17,9 +15,12 @@ const Logs = sequelize.define(
         },
     }
 )
-Logs.belongsTo(User,{
-    foreignKey: 'userId',
-    as: 'user'
-})
+//
+Logs.associate = function(models){
+    Logs.belongsTo(require('./users'),{
+        foreignKey: 'userId',
+        as: 'user',
+    });
+};
 
 module.exports = Logs;

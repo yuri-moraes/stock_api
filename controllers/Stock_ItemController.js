@@ -32,7 +32,7 @@ module.exports ={
             return res.status(500).json(error.message)
         }
     },
-    async update(req, res){
+    async update(req, res, next){
         try{
             const {title, description, unity, price, category} = req.body;
             const updatedRows = await Stock_item.update({title, description, unity, price, category},{
@@ -47,23 +47,25 @@ module.exports ={
             if(updatedRows[0] === 0){
                 return res.status(404).json({message: "Item não encontrado!"})
             }
-            return res.status(200).json({message: 'Item atualizado!'})
+            req.action = `${req.authenticatedUser.email} fez uma alteração no item ${req.params.id}`
+            next()
         }catch(error){
             return res.status(500).json(error.message)
         }
     },
-    async delete(req, res){
+    async delete(req, res, next){
         try{
             const deletedRows = await Stock_item.destroy({where: {id: req.params.id}})
             if(deletedRows === 0){
                 return res.status(404).json({message: 'Item não encontrado!'})
             }
-            return res.status(200).json({message: 'Registro apagado!'})
+            req.action = `${req.authenticatedUser.email} deletou o item com id ${req.params.id}`
+            next()
         }catch(error){
             return res.status(500).json(error.message)
         }
     },
-    async remove_items(req, res){
+    async remove_items(req, res, next){
         try{
             const {id} = req.params
             const {unity} = req.body
@@ -77,13 +79,14 @@ module.exports ={
                 return res.status(400).json({message: 'Não há mais items em estoque'})
             }
             await stock_item.update({unity: newQuantity})
-            return res.status(200).json({message: "Item atualizado"})
+            req.action = `${req.authenticatedUser.email} retirou ${unity} unidades do item ${stock_item.title}`;
+            next()
         }catch(error){
             return res.status(500).json(error.message)
         }
 
     },
-    async insert_items(req, res){
+    async insert_items(req, res, next){
         try{
             const {id} = req.params
             const {unity} = req.body
@@ -93,7 +96,8 @@ module.exports ={
             }
             const newQuantity = stock_item.unity+unity
             await stock_item.update({unity: newQuantity})
-            return res.status(200).json({message: 'Foram adicionadas mais unidades para o item'})
+            req.action = `${req.authenticatedUser.email} adicionou ${unity} unidades do item ${stock_item.title}`;
+            next();
         }catch(error){
             return res.status(500).json(error.message)
         }
