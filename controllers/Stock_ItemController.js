@@ -3,11 +3,12 @@ const sequelize = require('../config/sequelize');
 const Stock_item = require('../models/stock_item');
 
 module.exports ={
-    async createItem(req, res){
+    async createItem(req, res, next){
         try{
             const {title, description, unity, price, category} = req.body;
-            const stock_item = await Stock_item.create({title, description, unity, price, category})
-            return res.status(201).json(stock_item)
+            const stock_item = await Stock_item.create({title, description, unity, price, category});
+            req.action = `inseriu o item ${stock_item.id}`;
+            next();
         }catch(error){
             return res.status(500).json(error.message)
         }
@@ -35,19 +36,21 @@ module.exports ={
     async update(req, res, next){
         try{
             const {title, description, unity, price, category} = req.body;
-            const updatedRows = await Stock_item.update({title, description, unity, price, category},{
-                where:{id: req.params.id}
-            })
             const allowedFields = ['title', 'description', 'unity', 'price', 'category']
             const updates = Object.keys(req.body)
             const isValidOperation = updates.every((updateBody) => allowedFields.includes(updateBody))
+
             if(!isValidOperation){
                 return res.status(400).json({message: "Parâmetro invalido"})
             }
+            const updatedRows = await Stock_item.update({title, description, unity, price, category},{
+                where:{id: req.params.id}
+            })
+
             if(updatedRows[0] === 0){
                 return res.status(404).json({message: "Item não encontrado!"})
             }
-            req.action = `${req.authenticatedUser.email} fez uma alteração no item ${req.params.id}`
+            req.action = `fez uma alteração no item ${req.params.id}`
             next()
         }catch(error){
             return res.status(500).json(error.message)
@@ -59,7 +62,7 @@ module.exports ={
             if(deletedRows === 0){
                 return res.status(404).json({message: 'Item não encontrado!'})
             }
-            req.action = `${req.authenticatedUser.email} deletou o item com id ${req.params.id}`
+            req.action = `deletou o item com id ${req.params.id}`
             next()
         }catch(error){
             return res.status(500).json(error.message)
@@ -79,7 +82,7 @@ module.exports ={
                 return res.status(400).json({message: 'Não há mais items em estoque'})
             }
             await stock_item.update({unity: newQuantity})
-            req.action = `${req.authenticatedUser.email} retirou ${unity} unidades do item ${stock_item.title}`;
+            req.action = `retirou ${unity} unidades do item ${stock_item.id}`;
             next()
         }catch(error){
             return res.status(500).json(error.message)
@@ -96,7 +99,7 @@ module.exports ={
             }
             const newQuantity = stock_item.unity+unity
             await stock_item.update({unity: newQuantity})
-            req.action = `${req.authenticatedUser.email} adicionou ${unity} unidades do item ${stock_item.title}`;
+            req.action = `adicionou ${unity} unidades do item ${stock_item.id}`;
             next();
         }catch(error){
             return res.status(500).json(error.message)
