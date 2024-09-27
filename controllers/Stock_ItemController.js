@@ -2,10 +2,17 @@ const { QueryTypes } = require('sequelize');
 const sequelize = require('../config/sequelize');
 const Stock_item = require('../models/stock_item');
 
+const allowedCategories = ['Jogos', 'Livros', 'Brinquedos', 'Acessórios'];
+
 module.exports ={
     async createItem(req, res, next){
         try{
-            const {title, description, unity, price, category} = req.body;
+            const {title, description, unity, price, category} = req.body;        
+            
+            if(!allowedCategories.includes(category)){
+                return res.status(400).json({message: `Categoria ${category} não é válida para a operação`})
+            }
+
             const stock_item = await Stock_item.create({title, description, unity, price, category});
             req.action = `inseriu o item ${stock_item.id}`;
             next();
@@ -43,6 +50,12 @@ module.exports ={
             if(!isValidOperation){
                 return res.status(400).json({message: "Parâmetro invalido"})
             }
+            console.log(category)
+            if(category !== undefined && !allowedCategories.includes(req.body.category)){
+                console.log('caiu no if')
+                return res.status(400).json({message: `Categoria ${category} não é válida para a operação`})
+            }
+
             const updatedRows = await Stock_item.update({title, description, unity, price, category},{
                 where:{id: req.params.id}
             })
