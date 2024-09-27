@@ -19,7 +19,7 @@ const Logs = sequelize.define("logs",{
         }
     }
 )
-//
+
 Logs.associate = function(models){
     Logs.belongsTo(require('./users'),{
         foreignKey: 'userId',
