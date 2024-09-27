@@ -1,5 +1,6 @@
 const {DataTypes} = require('sequelize');
-const sequelize = require('../config/sequelize');
+const sequelize = require("../config/sequelize");
+const Logs = require('./logs');
 
 const User = sequelize.define('users',{
     name: {
@@ -18,6 +19,13 @@ const User = sequelize.define('users',{
     role: {
         type: DataTypes.STRING
     }
-})
+});
 
-module.exports = User
+User.associate = function(models){
+    User.hasMany(models.Logs,{
+        foreignKey: 'userId',
+        as: 'log',
+    });
+};
+
+module.exports = User;
