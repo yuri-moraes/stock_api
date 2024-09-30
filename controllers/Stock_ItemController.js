@@ -1,11 +1,22 @@
-const { QueryTypes } = require("sequelize");
-const sequelize = require("../config/sequelize");
-const Stock_item = require("../models/stock_item");
+const { QueryTypes } = require('sequelize');
+const sequelize = require('../config/sequelize');
+const Stock_item = require('../models/stock_item');
+
+const allowedCategories = ['Jogos', 'Livros', 'Brinquedos', 'Acessórios'];
 
 module.exports = {
   async createItem(req, res, next) {
     try {
       const { title, description, unity, price, category } = req.body;
+
+      if (!allowedCategories.includes(category)) {
+        return res
+          .status(400)
+          .json({
+            message: `Categoria ${category} não é válida para a operação`,
+          });
+      }
+
       const stock_item = await Stock_item.create({
         title,
         description,
@@ -32,7 +43,7 @@ module.exports = {
       const { id } = req.params;
       const stock_item = await Stock_item.findByPk(id);
       if (!stock_item) {
-        return res.status(404).json({ message: "Item não encontrado!" });
+        return res.status(404).json({ message: 'Item não encontrado!' });
       }
       return res.status(200).json(stock_item);
     } catch (error) {
@@ -43,20 +54,33 @@ module.exports = {
     try {
       const { title, description, unity, price, category } = req.body;
       const allowedFields = [
-        "title",
-        "description",
-        "unity",
-        "price",
-        "category",
+        'title',
+        'description',
+        'unity',
+        'price',
+        'category',
       ];
       const updates = Object.keys(req.body);
-      const isValidOperation = updates.every((updateBody) =>
+      const isValidOperation = updates.every(updateBody =>
         allowedFields.includes(updateBody)
       );
 
       if (!isValidOperation) {
-        return res.status(400).json({ message: "Parâmetro invalido" });
+        return res.status(400).json({ message: 'Parâmetro invalido' });
       }
+      console.log(category);
+      if (
+        category !== undefined &&
+        !allowedCategories.includes(req.body.category)
+      ) {
+        console.log('caiu no if');
+        return res
+          .status(400)
+          .json({
+            message: `Categoria ${category} não é válida para a operação`,
+          });
+      }
+
       const updatedRows = await Stock_item.update(
         { title, description, unity, price, category },
         {
@@ -65,7 +89,7 @@ module.exports = {
       );
 
       if (updatedRows[0] === 0) {
-        return res.status(404).json({ message: "Item não encontrado!" });
+        return res.status(404).json({ message: 'Item não encontrado!' });
       }
       req.action = `fez uma alteração no item ${req.params.id}`;
       next();
@@ -79,7 +103,7 @@ module.exports = {
         where: { id: req.params.id },
       });
       if (deletedRows === 0) {
-        return res.status(404).json({ message: "Item não encontrado!" });
+        return res.status(404).json({ message: 'Item não encontrado!' });
       }
       req.action = `deletou o item com id ${req.params.id}`;
       next();
@@ -94,13 +118,13 @@ module.exports = {
       const stock_item = await Stock_item.findByPk(id);
 
       if (!stock_item) {
-        return res.status(404).json({ message: "Item não encontrado!" });
+        return res.status(404).json({ message: 'Item não encontrado!' });
       }
       const newQuantity = stock_item.unity - unity;
       if (newQuantity < 0) {
         return res
           .status(400)
-          .json({ message: "Não há mais items em estoque" });
+          .json({ message: 'Não há mais items em estoque' });
       }
       await stock_item.update({ unity: newQuantity });
       req.action = `retirou ${unity} unidades do item ${stock_item.id}`;
@@ -115,7 +139,7 @@ module.exports = {
       const { unity } = req.body;
       const stock_item = await Stock_item.findByPk(id);
       if (!stock_item) {
-        return res.status(404).json({ message: "Item não encontrado!" });
+        return res.status(404).json({ message: 'Item não encontrado!' });
       }
       const newQuantity = stock_item.unity + unity;
       await stock_item.update({ unity: newQuantity });
@@ -137,11 +161,11 @@ module.exports = {
 
       if (uuidRegex.test(search_param)) {
         //Se for UUID válido, faz a busca por ID
-        query = "SELECT * FROM stock_items WHERE id = :search_id";
+        query = 'SELECT * FROM stock_items WHERE id = :search_id';
         replacements = { search_id: search_param };
       } else {
         //Caso contrário busca pelo titulo
-        query = "SELECT * FROM stock_items WHERE title ILIKE :search_title";
+        query = 'SELECT * FROM stock_items WHERE title ILIKE :search_title';
         replacements = { search_title: `%${search_param}%` };
       }
 
@@ -151,7 +175,7 @@ module.exports = {
       });
 
       if (items.length === 0) {
-        return res.status(404).json({ message: "Item não encontrado" });
+        return res.status(404).json({ message: 'Item não encontrado' });
       }
 
       return res.status(200).json(items);
