@@ -6,13 +6,7 @@ module.exports = {
   async createItem(req, res, next) {
     try {
       const { title, description, unity, price, category } = req.body;
-      const stock_item = await Stock_item.create({
-        title,
-        description,
-        unity,
-        price,
-        category,
-      });
+      const stock_item = await Stock_item.create({title,description,unity,price,category,});
       req.action = `inseriu o item ${stock_item.id}`;
       next();
     } catch (error) {
@@ -42,27 +36,17 @@ module.exports = {
   async update(req, res, next) {
     try {
       const { title, description, unity, price, category } = req.body;
-      const allowedFields = [
-        "title",
-        "description",
-        "unity",
-        "price",
-        "category",
-      ];
+      const allowedFields = ["title","description","unity","price","category",];
       const updates = Object.keys(req.body);
-      const isValidOperation = updates.every((updateBody) =>
-        allowedFields.includes(updateBody)
-      );
+      const isValidOperation = updates.every((updateBody) => allowedFields.includes(updateBody));
 
       if (!isValidOperation) {
         return res.status(400).json({ message: "Parâmetro invalido" });
       }
       const updatedRows = await Stock_item.update(
-        { title, description, unity, price, category },
-        {
+        { title, description, unity, price, category },{
           where: { id: req.params.id },
-        }
-      );
+        });
 
       if (updatedRows[0] === 0) {
         return res.status(404).json({ message: "Item não encontrado!" });
@@ -98,9 +82,7 @@ module.exports = {
       }
       const newQuantity = stock_item.unity - unity;
       if (newQuantity < 0) {
-        return res
-          .status(400)
-          .json({ message: "Não há mais items em estoque" });
+        return res.status(400).json({ message: "Não há mais items em estoque" });
       }
       await stock_item.update({ unity: newQuantity });
       req.action = `retirou ${unity} unidades do item ${stock_item.id}`;
