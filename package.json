@@ -8,7 +8,10 @@
   "scripts": {
     "vercel-build": "npx sequelize-cli db:migrate",
     "start": "node index.js",
-    "api": "nodemon src/index.js"
+    "prepare": "husky install",
+    "api": "nodemon src/index.js",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,md}\""
   },
   "keywords": [],
   "author": "",
@@ -26,8 +29,22 @@
     "sequelize": "^6.37.3",
     "uuid": "^10.0.0"
   },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "src/**/*.{json,css,md}": [
+      "prettier --write"
+    ]
+  },
   "devDependencies": {
-    "eslint": "^9.11.0",
-    "globals": "^15.9.0"
+    "eslint": "^9.11.1",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "globals": "^15.9.0",
+    "husky": "^9.1.6",
+    "lint-staged": "^15.2.10",
+    "prettier": "^3.3.3"
   }
 }
