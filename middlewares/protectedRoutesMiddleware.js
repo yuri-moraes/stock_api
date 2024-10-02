@@ -5,9 +5,7 @@ require("dotenv").config();
 module.exports = async (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (!authHeader) {
-    return res
-      .status(401)
-      .json({ message: "É necessário fornecer um token de autorização" });
+    return res.status(401).json({ message: "É necessário fornecer um token de autorização" });
   }
   const token = authHeader.split(" ")[1];
 

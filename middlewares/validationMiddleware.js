@@ -7,16 +7,11 @@ module.exports = {
 
     if (user) {
       console.log("email cadastrado");
-      return res
-        .status(400)
-        .json({ message: `O email ${user.email} já está cadastrado!` });
+      return res.status(400).json({ message: `O email ${user.email} já está cadastrado!` });
     }
 
     if (
-      typeof name !== "string" ||
-      !email.includes("@") ||
-      typeof password !== "string"
-    ) {
+      typeof name !== "string" || !email.includes("@") || typeof password !== "string") {
       console.log("dados inválidoss");
       return res.status(400).json({ message: `Dados inválidos` });
     }
@@ -27,9 +22,7 @@ module.exports = {
   async validateLogin(req, res, next) {
     const { email, password } = req.body;
     if (typeof email !== "string" || typeof password !== "string") {
-      return res
-        .status(400)
-        .json({ message: "Tipo de email ou senha invalido" });
+      return res.status(400).json({ message: "Tipo de email ou senha invalido" });
     }
     const user = await User.findOne({ where: { email: email } });
     if (!user) {
